@@ -9,7 +9,6 @@ class SocketFactory:
         """Returns a Socket Object configured to listen on the passed port"""
         return_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         return_socket.bind(("", port))
-        return_socket.listen()
         return return_socket
 
 
@@ -42,6 +41,7 @@ class WebServer:
         self.server_socket = SocketFactory.get_socket(port)
 
     def start(self) -> None:
+        self.server_socket.listen()
         while True:
             connection, ipaddress = self.server_socket.accept()
             test = connection.recv(2048)

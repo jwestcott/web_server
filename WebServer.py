@@ -1,6 +1,5 @@
 import socket
 
-from HTTPRequest import HTTPRequest
 from SplitterHTTPParser import SplitterHTTPParser
 
 

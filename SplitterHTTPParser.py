@@ -10,7 +10,6 @@ class SplitterHTTPParser(BaseHTTPParser):
     def parse(http_byte_set: bytes) -> HTTPRequest:
         """Implements the HTTPParser through the use of the inbuilt split command to separate the incoming bytestream"""
         http_lines = http_byte_set.split(b"\r\n")
-        print(http_lines)
         http_method, http_url, http_version = SplitterHTTPParser._extract_first_line(http_lines[0])
         http_headers = SplitterHTTPParser._extract_headers(http_lines[1:-2])
         data = http_lines[-1]

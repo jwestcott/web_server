@@ -1,5 +1,7 @@
-from dataclasses import dataclass
 import socket
+
+from HTTPRequest import HTTPRequest
+from SplitterHTTPParser import SplitterHTTPParser
 
 
 class SocketFactory:
@@ -12,28 +14,6 @@ class SocketFactory:
         return return_socket
 
 
-@dataclass
-class HTTPRequest:
-    """Class for keeping track of HTTP request information"""
-    return_ip: str
-    return_port: int
-    method: str
-    url: str
-    http_version: str
-    headers: dict
-    data: str
-
-
-class HTTPParser:
-
-    @staticmethod
-    def parse_request(request: bytes) -> HTTPRequest:
-        request_str = request.decode("ASCII")
-        request_split = request_str.split("\r\n")
-        method, url, http_version = request_split[0].split(" ")
-        return HTTPRequest(method, url, http_version, {"test": "test"}, "DATA")
-
-
 class WebServer:
 
     def __init__(self, port=8080) -> None:
@@ -44,9 +24,9 @@ class WebServer:
         self.server_socket.listen()
         while True:
             connection, ipaddress = self.server_socket.accept()
-            test = connection.recv(2048)
-            request = HTTPParser.parse_request(test)
-            print(request)
+            incoming_bytes = connection.recv(2048)
+            http_request = SplitterHTTPParser.parse(incoming_bytes)
+            print(http_request)
 
 
 if __name__ == "__main__":

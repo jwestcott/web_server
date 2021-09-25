@@ -1,7 +1,7 @@
 from typing import Tuple, Dict, List
 
-from BaseHTTPParser import BaseHTTPParser
-from HTTPRequest import HTTPRequest
+from vulcan.http.BaseHTTPParser import BaseHTTPParser
+from vulcan.http.HTTPRequest import HTTPRequest
 
 
 class SplitterHTTPParser(BaseHTTPParser):
@@ -10,17 +10,17 @@ class SplitterHTTPParser(BaseHTTPParser):
     def parse(http_byte_set: bytes) -> HTTPRequest:
         """Implements the HTTPParser through the use of the inbuilt split command to separate the incoming bytestream"""
         http_lines = http_byte_set.split(b"\r\n")
-        http_method, http_url, http_version = SplitterHTTPParser._extract_first_line(http_lines[0])
+        http_method, http_uri, http_version = SplitterHTTPParser._extract_first_line(http_lines[0])
         http_headers = SplitterHTTPParser._extract_headers(http_lines[1:-2])
         data = http_lines[-1]
-        return HTTPRequest(http_method, http_url, http_version, http_headers, data)
+        return HTTPRequest(http_method, http_uri, http_version, http_headers, data)
 
     @staticmethod
     def _extract_first_line(http_first_line: bytes) -> Tuple[str, str, str]:
         http_first_line_string = http_first_line.decode("ASCII")
         http_fields = http_first_line_string.split(" ")
-        http_method, http_url, http_version = http_fields
-        return http_method, http_url, http_version
+        http_method, http_uri, http_version = http_fields
+        return http_method, http_uri, http_version
 
     @staticmethod
     def _extract_headers(http_headers: List[bytes]) -> Dict[str, str]:

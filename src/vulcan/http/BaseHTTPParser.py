@@ -1,4 +1,4 @@
-from HTTPRequest import HTTPRequest
+from vulcan.http.HTTPRequest import HTTPRequest
 
 
 class BaseHTTPParser:

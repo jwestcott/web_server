@@ -1,7 +1,7 @@
 from typing import Tuple, Dict, List
 
-from BaseHTTPParser import BaseHTTPParser
-from HTTPRequest import HTTPRequest
+from vulcan.http.BaseHTTPParser import BaseHTTPParser
+from vulcan.http.HTTPRequest import HTTPRequest
 
 
 class SplitterHTTPParser(BaseHTTPParser):

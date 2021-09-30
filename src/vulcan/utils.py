@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, tzinfo
 
 
 class TimestampMixin:
@@ -43,8 +43,9 @@ class TimestampMixin:
 
     def set_timestamp(self, timestamp: datetime) -> None:
         """
-        Overwrites the stored timestamp to the
+        Overwrites the stored timestamp to the passed timestamp. Timestamp is automatically converted to the default
+        timezone (by default this is UTC).
 
-        :param timestamp:
+        :param timestamp: datetime object that is going to be used to replace the
         """
-        self._timestamp = timestamp.astimezone(self.TIMEZONE)
+        self._timestamp = timestamp

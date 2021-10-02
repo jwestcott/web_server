@@ -1,62 +1,29 @@
 from datetime import datetime, timezone, tzinfo
 from typing import Dict
 
+from vulcan.utils import TimestampMixin
 
-class BaseRequest:
+class BaseRequest(TimestampMixin):
     """
-    Base class for all incoming request types.
-
-    This class predominantly adds a timestamp to an incoming request. By default the timestamp is the current time in
-    the UTC timezone. This behaviour can however be overridden to support any timezone that extends the datetime.tzinfo
-    class.
+    Base class for all request objects. Uses the TimestampMixin to provide timestamp capabilities.
     """
 
-    TIMEZONE: tzinfo = timezone.utc
-
-    def __init__(self, timestamp: datetime = None) -> None:
-        if timestamp is None:
-            self._timestamp = datetime.now(self.TIMEZONE)
-        else:
-            self._timestamp = timestamp.astimezone(self.TIMEZONE)
-
-    def get_timestamp(self) -> datetime:
-        self._timestamp = self._timestamp.astimezone(self.TIMEZONE)
-        return self._timestamp
-
-    def set_timestamp(self, timestamp: datetime) -> None:
-        self._timestamp = timestamp.astimezone(self.TIMEZONE)
-
-    @classmethod
-    def set_all_timezone(cls, timezone: tzinfo) -> None:
-        cls.TIMEZONE = timezone
-
-
-
-
-
-
-
-
-
-
-
-
-
+    def __init__(self):
+        super().__init__()
 
 
 class HTTPRequest(BaseRequest):
-    """Class for keeping track of HTTP request information"""
+    """
+    Data class for keeping track of HTTP request information.
+    """
 
-    def __init__(self, method: str, uri: str, http_version: str, headers: Dict[str, str], data: bytes,
-                 timestamp: datetime = None):
-        super().__init__(timestamp=timestamp)
+    def __init__(self, method: str, uri: str, http_version: str, headers: Dict[str, str], data: bytes):
+        super().__init__()
         self.method = method
-        self.uri = uri,
+        self.uri = uri
         self.http_version = http_version
         self.headers = headers
         self.data = data
 
-
-if __name__ == "__main__":
-    a = BaseRequest()
-    print(a)
+    def __repr__(self) -> str:
+        return "HTTPRequest(http_version={}, method={}, uri={})".format(self.http_version, self.method, self.uri)

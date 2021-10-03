@@ -1,5 +1,6 @@
 from typing import Dict
 
+from vulcan.http.serializers import Serializable
 from vulcan.utils import TimestampMixin
 
 class BaseRequest(TimestampMixin):
@@ -11,7 +12,7 @@ class BaseRequest(TimestampMixin):
         super().__init__()
 
 
-class HTTPRequest(BaseRequest):
+class HTTPRequest(BaseRequest, Serializable):
     """
     Data class for keeping track of HTTP request information.
     """
@@ -23,6 +24,9 @@ class HTTPRequest(BaseRequest):
         self.http_version = http_version
         self.headers = headers
         self.data = data
+
+    def serialize(self) -> bytes:
+        pass
 
     def __repr__(self) -> str:
         return "HTTPRequest(http_version={}, method={}, uri={})".format(self.http_version, self.method, self.uri)

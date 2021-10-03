@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Dict
 
 class Serializable(ABC):
     """
@@ -14,3 +15,18 @@ class Serializable(ABC):
         :return: The serialized result as a bytes object.
         """
         pass
+
+
+def serlialize_http_headers(header_dict: Dict[str, str]) -> bytes:
+    """
+
+    :param header_dict:
+    :return:
+    """
+    if len(header_dict) == 0:
+        return b""
+    else:
+        return_bytes = b""
+        for header_key, header_value in header_dict.items():
+            return_bytes += "{}: {}\r\n".format(header_key, header_value).encode("ASCII")
+        return return_bytes

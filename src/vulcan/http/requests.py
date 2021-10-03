@@ -1,6 +1,6 @@
 from typing import Dict
 
-from vulcan.http.serializers import Serializable
+from vulcan.http.serializers import Serializable, serlialize_http_headers
 from vulcan.utils import TimestampMixin
 
 class BaseRequest(TimestampMixin):
@@ -26,7 +26,20 @@ class HTTPRequest(BaseRequest, Serializable):
         self.data = data
 
     def serialize(self) -> bytes:
-        pass
+        """
+        Serializes the HTTP Request to a bytes object.
+
+        :return: A bytes object representing the HTTPRequest object
+        """
+        request_line = b" ".join([x.encode("ASCII") for x in [self.method, self.uri, self.http_version]]) + b"\r\n"
+        header_lines = serlialize_http_headers(self.headers)
+        data_lines = b"" if self.data is None else self.data
+        return request_line + header_lines + b"\r\n" + data_lines
 
     def __repr__(self) -> str:
         return "HTTPRequest(http_version={}, method={}, uri={})".format(self.http_version, self.method, self.uri)
+
+
+if __name__ == "__main__":
+    a = HTTPRequest("GET", "/", "HTTP/1.1", {"test": "test"}, b"data")
+    print(a.serialize().decode("ASCII"))

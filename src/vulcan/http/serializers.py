@@ -31,3 +31,20 @@ def serlialize_http_headers(header_dict: Dict[str, str]) -> bytes:
         for header_key, header_value in header_dict.items():
             return_bytes += "{}: {}\r\n".format(header_key, header_value).encode("ASCII")
         return return_bytes
+
+
+class Parseable(ABC):
+    """
+    Base Abstract class (interface) that indicates a class can be parsed.
+    """
+    pass
+
+
+class BaseParser(ABC):
+    """
+    Base Abstract class (interface) for parsing parseable objects.
+    """
+
+    @abstractmethod
+    def parse(self, input_bytes_object: bytes) -> Parseable:
+        pass

@@ -1,6 +1,6 @@
 from typing import Dict
 
-from vulcan.http.serializers import Serializable, serlialize_http_headers
+from vulcan.http.serializers import Serializable, serlialize_http_headers, Parseable, BaseParser
 from vulcan.utils import TimestampMixin
 
 class BaseResponse(TimestampMixin):
@@ -12,7 +12,7 @@ class BaseResponse(TimestampMixin):
         super().__init__()
 
 
-class HTTPResponse(BaseResponse, Serializable):
+class HTTPResponse(BaseResponse, Serializable, Parseable):
     """
     Data class for keeping track of HTTP response information.
     """
@@ -47,4 +47,9 @@ class HTTPResponse(BaseResponse, Serializable):
         return "HTTPResponse(http_version={}, status_code={}, phrase={})".format(self.http_version,
                                                                                  self.status_code,
                                                                                  self.phrase)
-    
+
+
+class HTTPResponseParser(BaseParser):
+
+    def parse(self, input_bytes_object: bytes) -> HTTPResponse:
+        pass

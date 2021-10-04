@@ -19,9 +19,10 @@ class Serializable(ABC):
 
 def serlialize_http_headers(header_dict: Dict[str, str]) -> bytes:
     """
+    Serializes a dictionary containing HTTP headers into a bytes object
 
-    :param header_dict:
-    :return:
+    :param header_dict: A dictionary containing key value pairs of HTTP headers
+    :return: a bytes object representing the serialized HTTP headers
     """
     if len(header_dict) == 0:
         return b""

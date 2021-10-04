@@ -29,7 +29,8 @@ class WebServer:
             incoming_bytes = connection.recv(2048)
             http_request = self.HTTP_PARSER.parse(incoming_bytes)
             print(http_request)
-            http_response = HTTPResponse(headers={"Content-Type": "text/html"}, data=b"<h1>HELLO JONATHAN</h1>")
+            response = "<h1>{}</h1>".format(http_request.uri)
+            http_response = HTTPResponse(headers={"Content-Type": "text/html"}, data=response.encode("ASCII"))
             connection.send(http_response.serialize())
 
 

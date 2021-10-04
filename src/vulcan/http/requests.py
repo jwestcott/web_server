@@ -17,7 +17,13 @@ class HTTPRequest(BaseRequest, Serializable):
     Data class for keeping track of HTTP request information.
     """
 
-    def __init__(self, method: str, uri: str, http_version: str, headers: Dict[str, str], data: bytes):
+    def __init__(self,
+                 method: str = "GET",
+                 uri: str = "/",
+                 http_version: str = "HTTP/1.1",
+                 headers: Dict[str, str] = {},
+                 data: bytes = None
+                 ):
         super().__init__()
         self.method = method
         self.uri = uri
@@ -38,8 +44,3 @@ class HTTPRequest(BaseRequest, Serializable):
 
     def __repr__(self) -> str:
         return "HTTPRequest(http_version={}, method={}, uri={})".format(self.http_version, self.method, self.uri)
-
-
-if __name__ == "__main__":
-    a = HTTPRequest("GET", "/", "HTTP/1.1", {"test": "test"}, b"data")
-    print(a.serialize().decode("ASCII"))

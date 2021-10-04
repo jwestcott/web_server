@@ -1,6 +1,7 @@
 import socket
 
-from SplitterHTTPParser import SplitterHTTPParser
+from vulcan.http.requests import HTTPRequestParser
+from vulcan.http.responses import HTTPResponse
 
 
 class SocketFactory:
@@ -15,6 +16,8 @@ class SocketFactory:
 
 class WebServer:
 
+    HTTP_PARSER = HTTPRequestParser()
+
     def __init__(self, port=8080) -> None:
         self.port = port
         self.server_socket = SocketFactory.get_socket(port)
@@ -24,8 +27,10 @@ class WebServer:
         while True:
             connection, ipaddress = self.server_socket.accept()
             incoming_bytes = connection.recv(2048)
-            http_request = SplitterHTTPParser.parse(incoming_bytes)
+            http_request = self.HTTP_PARSER.parse(incoming_bytes)
             print(http_request)
+            http_response = HTTPResponse(headers={"Content-Type": "text/html"}, data=b"<h1>HELLO JONATHAN</h1>")
+            connection.send(http_response.serialize())
 
 
 if __name__ == "__main__":

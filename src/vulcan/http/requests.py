@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Tuple, List
 
 from vulcan.http.serializers import Serializable, serlialize_http_headers, Parseable, BaseParser
 from vulcan.utils import TimestampMixin
@@ -48,6 +48,33 @@ class HTTPRequest(BaseRequest, Serializable, Parseable):
 
 class HTTPRequestParser(BaseParser):
 
-    def parse(self, input_bytes_object: bytes) -> HTTPRequest:
-        pass
+    def parse(self, http_byte_set: bytes) -> HTTPRequest:
+        """
+        Implements the HTTPParser through the use of the inbuilt split command to separate the incoming bytestream.
+        """
+        http_lines = http_byte_set.split(b"\r\n")
+        http_method, http_uri, http_version = self._extract_first_line(http_lines[0])
+        http_headers = self._extract_headers(http_lines[1:-2])
+        data = http_lines[-1]
+        return HTTPRequest(
+            method = http_method,
+            uri = http_uri,
+            http_version = http_version,
+            headers = http_headers,
+            data = data
+        )
+
+    def _extract_first_line(self, http_first_line: bytes) -> Tuple[str, str, str]:
+        http_first_line_string = http_first_line.decode("ASCII")
+        http_fields = http_first_line_string.split(" ")
+        http_method, http_uri, http_version = http_fields
+        return http_method, http_uri, http_version
+
+    def _extract_headers(self, http_headers: List[bytes]) -> Dict[str, str]:
+        http_header_dict = {}
+        for header_pair in http_headers:
+            header_pair_str = header_pair.decode("ASCII")
+            header_pair_split = header_pair_str.split(": ")
+            http_header_dict[header_pair_split[0]] = "".join(header_pair_split[1:])
+        return http_header_dict
 
